@@ -340,7 +340,7 @@ const drawDonutChart = (containerId, percentage, fillColor) => {
     const width = rect.width;
     const height = rect.height;
 
-    const size = Math.min(width, height, 150) - 10;
+    const size = Math.min(width, height, 250) - 10;
     
     if (size <= 0) {
         const fallbackSize = 100;
