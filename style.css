@@ -1,0 +1,269 @@
+/*
+ * ================================================
+ * VARIÁVEIS DE CÁLCULO PARA PAINÉIS
+ * ================================================
+*/
+:root {
+    --grid-gap: 15px;
+    --panel-cell-size: 20vw; /* Largura de cada painel: 20% da largura do viewport */
+    --panel-right-margin: 60px; /* Distância fixa dos painéis da margem direita */
+    
+    /* VARIÁVEIS AUXILIARES PARA CÁLCULO DE POSIÇÃO */
+    --grid-top: 90px; /* Distância do topo da janela */
+    --card-width: calc(var(--panel-cell-size) / 1.5); /* Largura do novo card flutuante */
+    --card-globe-margin: 50px; /* Margem entre o globo e o novo card */
+    
+    --grid-to-bottom-margin: 25px; /* Margem entre Grid e Painel Info */
+    --panel-info-height: 20vh; /* Altura do painel de informação (20% da altura do viewport) */
+    --panel-info-bottom-margin: 20px; /* Margem inferior do painel de informação */
+}
+
+/*
+ * ================================================
+ * ESTILOS GERAIS (Gradiante, Logos, Label)
+ * ================================================
+*/
+body {
+    /* Fundo escuro com gradiente radial para contraste */
+    background: radial-gradient(circle, #01061a, #000000);
+}
+
+#countryLabel {
+    font-family: courier;
+    color: white; 
+    height: 10px;
+    margin: 50px;
+}
+
+#logo {
+    position: absolute; top: 30px; left: 30px; width: 180px; border-radius: 5px; z-index:10;
+}
+#logo2 {
+    /* Posição fixa de 30px da direita (mantida fixa para o logo) */
+    position: absolute; top: 30px; right: 30px; 
+    width: 180px; border-radius: 5px; z-index:10;
+}
+
+/*
+ * ================================================
+ * ESTILOS DO GLOBO (Container: #globe)
+ * ================================================
+*/
+#globe {
+    cursor: grab;
+    position: fixed;
+    
+    /* Globo mantido a 150px da esquerda */
+    left: 150px; 
+    
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 60vh;
+    height: 60vh;
+    z-index: 5;
+    
+    border-radius: 50%;
+    overflow: hidden;
+    
+    /* Efeito de Halo/Brilho Pulsado */
+    animation: pulse-glow 3s infinite alternate ease-in-out;
+}
+
+/* ------------------------------------------------
+ * ANIMAÇÃO KEYFRAMES PARA O PULSO DO GLOW
+ * ------------------------------------------------ */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 10px rgba(75, 140, 242, 0.4), 
+                    0 0 20px rgba(75, 140, 242, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(75, 140, 242, 0.8), 
+                    0 0 70px rgba(75, 140, 242, 0.6);
+    }
+}
+
+/*
+ * ================================================
+ * ESTILO DO NOVO CARD DE DESTINO (FLUTUANTE) - CORRIGIDO
+ * ================================================
+*/
+#destination-card {
+    position: fixed;
+    /* Alinhado com o topo da grid */
+    top: var(--grid-top); 
+    
+    /* Posiciona o card à direita do globo com margem de 50px */
+    left: calc(50px + 60vh + var(--card-globe-margin));
+
+    width: var(--card-width); /* Largura mais pequena */
+    
+    /* CORREÇÃO: Usar min-height e height: auto para ajuste vertical automático */
+    height: auto;
+    min-height: 8vh; 
+
+    z-index: 25;
+    
+    /* Estilos de Aparência */
+    background-color: rgba(75, 140, 242, 0.2); 
+    opacity: 1; 
+    border-radius: 12px;
+    padding: 15px; /* Aumento do padding para melhor visualização */
+    
+    /* Sombra Angulada */
+    box-shadow: 
+        5px 5px 15px rgba(75, 140, 242, 0.2), /* Sombra clara, vinda de cima/esquerda */
+        5px 5px 15px rgba(0, 0, 0, 0.4); /* Sombra escura, vinda de baixo/direita */
+
+    border: none;
+    
+    /* ALINHAMENTO VERTICAL E HORIZONTAL */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+    align-items: center; /* Centra horizontalmente */
+    text-align: center; 
+
+    color: white; 
+    font-size: 14px; /* Tamanho base */
+}
+
+.destination-name-content {
+    color: white; 
+    font-weight: bold;
+    /* CORREÇÃO: Usar calc() para tamanho de fonte responsivo */
+    font-size: calc(1.5vw + 8px); 
+    line-height: 1.2;
+    margin-top: 5px;
+    
+    /* Garante quebra de texto robusta */
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+#destination-card h3 {
+    color: white; 
+    font-size: 22px;
+}
+
+/*
+ * ================================================
+ * ESTILOS DO CONTAINER DA GRADE (2x2)
+ * ================================================
+*/
+#right-panel-grid {
+    position: fixed;
+    /* Distância da margem direita: 60px */
+    right: var(--panel-right-margin); 
+    
+    top: var(--grid-top);
+    
+    /* CÁLCULO RESPONSIVO DA ALTURA: Garante que termina ANTES do Painel de Informação */
+    height: calc(100vh - var(--grid-top) - var(--grid-to-bottom-margin) - var(--panel-info-height) - var(--panel-info-bottom-margin));
+    
+    z-index: 20;
+
+    display: grid;
+    /* 2 colunas, cada uma com 20vw de largura */
+    grid-template-columns: var(--panel-cell-size) var(--panel-cell-size);
+    grid-template-rows: 1fr 1fr; /* Distribui a altura de forma igual pelas 2 linhas */
+    gap: var(--grid-gap); 
+    
+    box-sizing: border-box;
+    /* Largura total da grelha 2x2 (2 células + 1 gap) */
+    width: calc(2 * var(--panel-cell-size) + 1 * var(--grid-gap));
+}
+
+/*
+ * ================================================
+ * ESTILOS DOS PAINÉIS LATERAIS (Itens da Grade e Painel Info)
+ * ================================================
+*/
+.side-panel {
+    /* Aparência Comum */
+    background-color: rgba(255, 255, 255, 0.1); 
+    opacity: 0.8; /* Aumenta a opacidade para melhor visualização do gráfico */
+    border-radius: 24px;
+    padding: 15px;
+    box-sizing: border-box;
+    
+    /* Sombra Angulada (mantém a borda original, mas usa a sombra de ângulo) */
+    box-shadow: 
+        5px 5px 15px rgba(75, 140, 242, 0.3), /* Sombra clara/azulada, vinda de cima/esquerda */
+        5px 5px 15px rgba(0, 0, 0, 0.7); /* Sombra escura, vinda de baixo/direita */
+        
+    backdrop-filter: blur(3px);
+    border: 0.6px solid #686868; /* Mantém a borda original */
+    
+    /* Estilo de Texto Comum */
+    color: white; 
+    font-family: Arial, sans-serif;
+    font-size: 10px; 
+    
+    /* Flexbox de Conteúdo: Permitir que os elementos (título e gráfico) fluam */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinha o conteúdo ao topo */
+    align-items: center; /* Centra horizontalmente o conteúdo */
+}
+
+.side-panel h3 {
+    margin-top: 0;
+    margin-bottom: 5px; 
+    font-size: 14px; 
+    line-height: 1;
+    color: white; 
+    text-align: center;
+}
+
+/* Container específico para o gráfico, para gerir o tamanho dentro do painel */
+.chart-container {
+    flex-grow: 1; /* Permite que o container do gráfico ocupe o espaço restante */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Painel de Baixo (Painel de Informação) */
+#panel-bottom {
+    position: fixed;
+    /* Distância da margem direita: 60px */
+    right: var(--panel-right-margin); 
+    
+    /* Largura total do Painel de Informação (2 células + 1 gap) */
+    width: calc(2 * var(--panel-cell-size) + 1 * var(--grid-gap)); 
+    
+    /* Distância do fundo: 20px */
+    bottom: var(--panel-info-bottom-margin); 
+    
+    /* Altura: 20vh */
+    height: var(--panel-info-height); 
+    z-index: 30; 
+}
+
+/*
+ * ================================================
+ * ESTILO DA BARRA DE PROGRESSO (EVO) - NOVO
+ * ================================================
+*/
+#progress-bar-container {
+    position: fixed;
+    z-index: 15; /* Acima do fundo, mas abaixo do globo */
+
+    /* Posição Horizontal: Alinha com o lado esquerdo do globo */
+    left: 150px; 
+    
+    /* Largura: Deve ser igual à largura do globo (60vh) */
+    width: 60vh; 
+    
+    /* Posição Vertical: O globo está centrado (50% do topo) com 60vh de altura (30vh acima e 30vh abaixo).
+       Para ficar abaixo, posicionamos a 50% + 30vh (metade da altura do globo) + 20px de margem. */
+    top: calc(55% + 30vh + 20px); 
+    
+    /* Assegura que o SVG/texto se expande */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
